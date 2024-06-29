@@ -3,11 +3,11 @@
 Program to send any kind of Ethernet packet.
 
 
-# Table of contents
+## Table of contents
 
 <!-- mdtoc-start -->
 &bull; [raw_send](#raw_send)  
-&bull; [Table of contents](#table-of-contents)  
+&nbsp;&nbsp;&nbsp;&nbsp;&bull; [Table of contents](#table-of-contents)  
 &nbsp;&nbsp;&nbsp;&nbsp;&bull; [License](#license)  
 &nbsp;&nbsp;&nbsp;&nbsp;&bull; [Introduction](#introduction)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull; [Help](#help)  
