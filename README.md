@@ -41,10 +41,10 @@ at http://geeky-boy.com.  Can't see it?  Keep looking.
 ## Introduction
 
 The "raw_send" program opens a raw socket and sends a packet that you specify
-on the command line. The packet is specified as a hexidecimal string and must
+on the command line. The packet is specified as a hexadecimal string and must
 include Ethernet headers, IP headers, etc.
 
-This program must run with root privilages.
+This program must run with root privileges.
 
 
 ### Help
@@ -56,9 +56,9 @@ Where:
 -h : help
 -c : overwrite IP checksum with calculated value.
 -e : overwrite ethernet source address with interface MAC.
--g : overwrite IGMP checksum with calculated value.
+-g : overwrite IGMP checksum with the calculated value.
 -i : overwrite IP source address with interface address.
--u : overwrite UDP checksum with calculated value.
+-u : overwrite UDP checksum with the calculated value.
 interface : device name (e.g. 'eth0')
 hex_data : hex string with no spaces containing Ethernet headers, IP, etc.
 ````
@@ -68,10 +68,10 @@ hex_data : hex string with no spaces containing Ethernet headers, IP, etc.
 
 A common way of using this tool is to capture packets and use WireShark to
 display a packet you want to reproduce.
-If you select a packet, right click on the "Frame" section of the dissector,
-and select "Copy" -> "...As a Hex Stream", it will copy the hexidecimal
+If you select a packet, right-click on the "Frame" section of the dissector,
+and select "Copy" -> "...As a Hex Stream", it will copy the hexadecimal
 of the packet into your cut buffer.
-You can ten paste it as the "hex_data" parameter to raw_send.
+You can then paste it as the "hex_data" parameter to raw_send.
 For example, here's a "raw_send" command with an "igmp report" packet
 pasted as the hex data:
 ````
@@ -84,7 +84,7 @@ The raw_send tool will send the packet as-is.
 
 Where "em1" is the interface name.
 
-Note that this program requires root privilages to work.
+Note that this program requires root privileges to work.
 
 ## Update Sender Addresses
 
@@ -110,7 +110,7 @@ The "-g" flag does that for you automatically.
 
 ## Multicast Issues
 
-You migth ask whether this tool does the necessary IGMP operations in order
+You might ask whether this tool does the necessary IGMP operations in order
 to send multicast.
 The answer is that there ARE no IGMP operations necessary before sending
 multicast.
@@ -122,7 +122,7 @@ to convert.
 That said, you still might not see your expected behavior.
 For example, the first two examples in the enclosed "tst.sh" script send IGMP
 group membership reports, which can be used to tell the network to forward
-the requested mutlicast data to you.
+the requested multicast data to you.
 I.e. this is the packet sent when you "join" a socket to a multicast group.
 However, while this will certainly tell a switch with IGMP snooping to start
 forwarding the group to your host, your NIC is almost certainly not set up to
