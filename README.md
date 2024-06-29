@@ -15,6 +15,7 @@ Program to send any kind of Ethernet packet.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull; [Update Sender Addresses](#update-sender-addresses)  
 &nbsp;&nbsp;&nbsp;&nbsp;&bull; [Update UDP Data](#update-udp-data)  
 &nbsp;&nbsp;&nbsp;&nbsp;&bull; [Update IGMP Data](#update-igmp-data)  
+&nbsp;&nbsp;&nbsp;&nbsp;&bull; [Multicast Issues](#multicast-issues)  
 <!-- TOC created by '/home/sford/bin/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
@@ -48,7 +49,8 @@ This program must run with root privilages.
 
 ### Help
 
-raw_send -h
+````
+$ raw_send -h
 Usage: raw_send [-h] [-e] [-c] [-g] [-i] [-u] interface hex_data
 Where:
 -h : help
@@ -59,6 +61,7 @@ Where:
 -u : overwrite UDP checksum with calculated value.
 interface : device name (e.g. 'eth0')
 hex_data : hex string with no spaces containing Ethernet headers, IP, etc.
+````
 
 
 ## Wireshark 'Copy as Hex Stream'
@@ -90,8 +93,8 @@ same packets from your machine, you probably want to update the Ethernet
 MAC address and IP address of the source.
 This is painful to do by hand, but the "-e -i -c" flags make it easy.
 It overwrites the Ethernet header's source MAC address with the MAC
-address of the desired interface, ditto with the source IP address,
-and recalculates the IP checksum.
+address of the desired interface. Ditto with the source IP address.
+And recalculates the IP checksum.
 
 ## Update UDP Data
 
@@ -104,3 +107,46 @@ The "-u" flag does that for you automatically.
 Hand-editing the IGMP data on a datagram is painful but possible.
 One thing that is especially hard is re-calculating the IGMP checksum.
 The "-g" flag does that for you automatically.
+
+## Multicast Issues
+
+You migth ask whether this tool does the necessary IGMP operations in order
+to send multicast.
+The answer is that there ARE no IGMP operations necessary before sending
+multicast.
+You must make sure your hex_data contains the proper Ethernet MAC address
+associated with the destination multicast destination; you can use
+[this tool](https://www.dqnetworks.ie/toolsinfo.d/multicastaddressing.html#convertertool)
+to convert.
+
+That said, you still might not see your expected behavior.
+For example, the first two examples in the enclosed "tst.sh" script send IGMP
+group membership reports, which can be used to tell the network to forward
+the requested mutlicast data to you.
+I.e. this is the packet sent when you "join" a socket to a multicast group.
+However, while this will certainly tell a switch with IGMP snooping to start
+forwarding the group to your host, your NIC is almost certainly not set up to
+receive those multicast packets.
+I.e. the host will not actually see them.
+
+Here's a fun experiment.
+Use the tool to join a multicast group.
+Then use tcpdump to capture packets on the interface,
+supplying the "-p" option to turn off promiscuous mode.
+You should see no packets.
+Now do the same tcpdump without the "-p" option.
+Tcpdump will put the NIC into promiscuous mode,
+and the host will see the packets.
+
+(Interesting aside: I found in our lab that with promiscuous mode,
+I saw multicast packets for which I did NOT send a membership report.
+Turns out our switch is set for "multicast flooding", not IGMP snooping.
+I.e. all multicast forwarded to our network gets sent down every host's
+ethernet cable. This is generally not a good idea for a high-performance
+network.)
+
+Anyway, the moral of the story is when you tell the OS to "join" a socket to
+a multicast group, it does much more than just generate an IGMP membership
+report packet.
+It has to program the NIC and update various internal tables to actually
+receive and process those packets.
