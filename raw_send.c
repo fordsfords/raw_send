@@ -132,9 +132,9 @@ void help()
       "-h : help\n"
       "-c : overwrite IP checksum with calculated value.\n" 
       "-e : overwrite ethernet source address with interface MAC.\n"
-      "-g : overwrite IGMP checksum with calculated value.\n" 
+      "-g : overwrite IGMP checksum with the calculated value.\n" 
       "-i : overwrite IP source address with interface address.\n" 
-      "-u : overwrite UDP checksum with calculated value.\n" 
+      "-u : overwrite UDP checksum with the calculated value.\n" 
       "interface : device name (e.g. 'eth0')\n"
       "hex_data : hex string with no spaces containing Ethernet headers, IP, etc.\n"
   );
