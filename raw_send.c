@@ -206,6 +206,7 @@ uint16_t net_udp_checksum(struct udp_full_pkt_s *udp_full_pkt) {
   uint32_t checksum;
   uint8_t proto[2];
   int udp_len;
+  uint16_t result;
 
   /* IPv4 UDP Pseudo header. */
   checksum = running_checksum((uint8_t *)udp_full_pkt->i.ip_src_ip, 4, 0);
@@ -217,6 +218,9 @@ uint16_t net_udp_checksum(struct udp_full_pkt_s *udp_full_pkt) {
   /* Add in the actual UDP header and data. */
   udp_len = (udp_full_pkt->u.udp_len[0] << 8) + udp_full_pkt->u.udp_len[1];
   checksum = running_checksum((uint8_t *)&udp_full_pkt->u, udp_len, checksum);
+  result = htons(~(uint16_t)checksum);
+  /* If the final checksum would be zero, RFC 768 says to make it 0xffff. */
+  if (result == 0) { result = 0xffff; }
 
   return htons(~(uint16_t)checksum);
 }  /* net_udp_checksum */
