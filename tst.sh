@@ -3,7 +3,8 @@
 
 INTFC=em1
 
-tcpdump -i $INTFC -w /tmp/x.pcap --immediate-mode &
+# Note: /tmp/raw_send.pcap will be owned by root.
+tcpdump -i $INTFC -w /tmp/raw_send.pcap --immediate-mode &
 TCPDUMP_PID=$!
 
 sleep 0.2
