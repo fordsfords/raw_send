@@ -135,7 +135,7 @@ void help()
       "-g : overwrite IGMP checksum with the calculated value.\n" 
       "-i : overwrite IP source address with interface address.\n" 
       "-u : overwrite UDP checksum with the calculated value.\n" 
-      "interface : device name (e.g. 'eth0')\n"
+      "interface : device name (e.g. 'eth0').\n"
       "hex_data : hex string with no spaces containing Ethernet headers, IP, etc.\n"
   );
 }  /* help */
