@@ -13,6 +13,7 @@ done
 rm -rf raw_send
 
 echo "Building code"
+
 gcc -Wall -g -o raw_send raw_send.c
 if [ $? -ne 0 ]; then exit 1; fi
 
