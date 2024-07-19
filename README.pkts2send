@@ -1,0 +1,13 @@
+You will need to run the pkts2send.py script as follows:
+
+sudo python pkts2send.py \
+    -p <path to IPv4 frame dump - defaults to packet-IPv4.txt> \
+    -o <output file - defaults to raw_send.sh in local directory> \
+    -p <path to raw_send utility - defaults to ./raw_send> \
+    -A "arguments to raw_send - defaults to eth0"
+
+sudo is required as the raw socket send in raw_send requires root access to succeed.
+
+After running the python script, you can run the shell script created by the -o option to resend the
+underlying IPv4 frames without needing to use python.  For example, if you wished to send these IP
+frames from anothe host which does not have python installed.
