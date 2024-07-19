@@ -147,8 +147,8 @@ int hex2buffer(char *hex_str, uint8_t *buff, size_t buff_size)
   int i;
   uint8_t nibble_val;
 
-  if ((len & 1) == 1) { printf("Error, hex string must have an even number of characters.\n"); exit(1); }
-  if ((len/2) > buff_size) { printf("Error, hex string too large for buffer.\n"); exit(1); }
+  if ((len & 1) == 1) { printf("Error, hex string must have an even number of characters. len=%d\n", len); exit(1); }
+  if (len/2 > (buff_size) ) { printf("Error, hex string too large for buffer. len=%d, buff_size=%lu\n", len, buff_size); exit(1); }
 
   for (i = 0; i < len; i++) {
     char c = hex_str[i];
