@@ -1,0 +1,46 @@
+
+To use raw_send utility to resend packet data, you need to capture the IPv4 frames for the UDP streams of interest.
+
+To use wireshark to capture this data, you first need to use wireshark to capture the UDP streams of interest.
+In my case, that was the topic resolution stream and an LBTRM transport stream for Ultra Messaging (or LBM protocols).
+
+First filter the overall capture to just the UDP streams of interest.
+
+Use display filter of "udp.stream in { 0, 1 }":  in my testing UDP stream 0 was the topic resolution stream and
+UDP steam 1 was the LBTRM stream of interest.  Update the "0, 1" to reflect the UDP stream or streams to be resent.
+
+Export the "displayed" packets to a separate pcap file.
+
+Open that newly created packet capture in wireshark.  
+
+Using the Analyze->Enabled Protocols; disable the "UDP" protocol.
+Under the Edit->Preferences; under the IPv4 protocol section, dissable the "Reassemble fragmented IPv4 datagram.
+
+Wireshark will now be displaying the IPv4 frames instead of UDP packets.
+
+Now export the packet dissections:
+    as plain text: disable the "Summary line", disable the "Details", and enable the "Bytes"
+
+The resulting file will contain blocks of data - such as:
+
+0000  01 00 5e 40 3a 4c 00 50 56 c0 00 01 08 00 45 00   ..^@:L.PV.....E.
+0010  00 9b f6 ef 40 00 10 11 0e ac c0 a8 7a 01 ef c0   ....@.......z...
+0020  3a 4c e3 95 32 a5 00 87 9e 90 18 00 00 01 6a 75   :L..2.........ju
+0030  6e 6b 65 72 00 90 10 00 10 fd bf f6 89 00 04 00   nker............
+0040  38 08 24 80 00 10 c0 a8 7a 01 61 a8 ef c0 3a 4d   8.$.....z.a...:M
+0050  38 40 8b 7c 21 33 fd bf f6 89 b2 2d 25 c4 88 35   8@.|!3.....-%..5
+0060  3d bf 00 00 01 0e 10 80 00 59 d9 00 00 c0 a8 7a   =........Y.....z
+0070  01 00 00 00 00 c0 a8 7a 01 ef c0 3a 4d 33 21 7c   .......z...:M3!|
+0080  8b 38 40 61 a8 81 0c 80 00 39 60 f6 0a da 9e 00   .8@a.....9`.....
+0090  3e 82 04 80 00 83 08 80 01 06 0e 00 00 84 08 80   >...............
+00a0  00 00 00 00 00 80 04 00 24                        ........$
+
+This block needs to be converted into the hexdata string used by raw_send.
+Doing this by hand gets the following hexdata from the above block:
+
+01005e403a4c005056c0000108004500009bf6ef400010110eacc0a87a01efc03a4ce39532a500879e90180000016a756e6b65720090100010fdbff689000400380824800010c0a87a0161a8efc03a4d38408b7c2133fdbff689b22d25c488353dbf0000010e10800059d90000c0a87a0100000000c0a87a01efc03a4d33217c8b384061a8810c80003960f60ada9e003e8204800083088001060e0000840880000000000080040024
+
+There are a number of ways to script this conversion.  I created a python program to parse the data, and call raw_send
+with the appropriate hexdata and optionally, to save a shell script equivalent of the calls to raw_send.
+
+See the README.pkts2send.
